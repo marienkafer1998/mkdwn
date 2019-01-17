@@ -26,13 +26,31 @@ function switchStrikethrough() {
     return Wrapping('~~');
 }
 
-
 function Wrapping(Pattern: string) {
-    //
 
+    let editor = window.activeTextEditor;
+    let selections = editor.selections;
+
+    for (let i = 0; i < selections.length; i++) {
+        var selection = editor.selections[i];
+        let cursor = selection.active;
+        //nothing is selected, only cursor
+        if (selection.isEmpty) { 
+            let wordRange = editor.document.getWordRangeAtPosition(cursor);
+            if (wordRange === undefined) {
+                wordRange = selection;
+            }
+            return addPattern(editor, cursor, wordRange, false, Pattern);
+            
+        } else { // Text is selected
+            return addPattern(editor, cursor, selection, true, Pattern);
+        }
+    }
 }
 
-function addPattern(range, text) {
+
+function addPattern(editor, cursor, range, isSelected, Pattern)
+ {
     //to add pattern if selection is not wrapped
 }
 
