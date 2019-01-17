@@ -57,11 +57,42 @@ function wrapping(editor, cursor, range, isSelected, Pattern)
     if (isWrapped(text, Pattern)) {
         // delete patterns from selection     
         promise = replaceText(range, text.substr(Pattern.length, text.length - Pattern.length - Pattern.length));
+       
+        if (!isSelected) {
+            if (!range.isEmpty) { 
+                if (cursor.character === range.start.character) {
+                    newCursor = cursor;
+                } else if (cursor.character === range.end.character) {
+                    newCursor = cursor.with({ character: cursor.character - Pattern.length - Pattern.length });
+                } else {
+                    newCursor = cursor.with({ character: cursor.character - Pattern.length });
+                }
+            } else { 
+                newCursor = cursor.with({ character: cursor.character + Pattern.length });
+            }
+        }
     }
     else {
         // add patterns around selection
         promise = replaceText(range, Pattern + text + Pattern);
+        if (!isSelected) {
+            if (!range.isEmpty) { 
+                if (cursor.character === range.start.character) {
+                    newCursor = cursor;
+                } else if (cursor.character === range.end.character) {
+                    newCursor = cursor.with({ character: cursor.character + Pattern.length + Pattern.length });
+                } else {
+                    newCursor = cursor.with({ character: cursor.character + Pattern.length });
+                }
+            } else { 
+                newCursor = cursor.with({ character: cursor.character + Pattern.length });
+            }
+        }
     }
+    if (!isSelected) {
+        editor.selection = new Selection(newCursor, newCursor);
+    }
+
     return promise;
 }
 
