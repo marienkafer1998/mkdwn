@@ -48,7 +48,7 @@ function wrapSelection(Pattern: string) {
     }
 }
 
-function wrapping(editor, cursor, range, isSelected, Pattern)
+function wrapping(editor: TextEditor, cursor: Position, range: Range, isSelected: boolean, Pattern: string)
  {
     let promise: Thenable<boolean>;
     let text = editor.document.getText(range);
@@ -96,13 +96,13 @@ function wrapping(editor, cursor, range, isSelected, Pattern)
     return promise;
 }
 
-function replaceText(range, text) {
+function replaceText(range: Range, text: string) {
     let editor = window.activeTextEditor;
     return editor.edit(edit => {
         edit.replace(range, text);
     });
 }
 
-function isWrapped(text, Pattern): boolean {     //is selection is wrapped
+function isWrapped(text: string, Pattern: string): boolean {     //is selection is wrapped
     return text.startsWith(Pattern) && text.endsWith(Pattern);    
 }
